@@ -1,0 +1,38 @@
+export const students = [
+  {
+    id: 1,
+    name: "Rahul Sharma",
+    email: "rahul@gmail.com",
+    phone: "9876543210",
+    course: "MERN Stack",
+    status: "Active",
+    joined: "15 Jul 2026",
+  },
+  {
+    id: 2,
+    name: "Priya Singh",
+    email: "priya@gmail.com",
+    phone: "9876543211",
+    course: "Java Full Stack",
+    status: "Active",
+    joined: "12 Jul 2026",
+  },
+  {
+    id: 3,
+    name: "Amit Kumar",
+    email: "amit@gmail.com",
+    phone: "9876543212",
+    course: "Python",
+    status: "Inactive",
+    joined: "10 Jul 2026",
+  },
+  {
+    id: 4,
+    name: "Anjali Verma",
+    email: "anjali@gmail.com",
+    phone: "9876543213",
+    course: "React",
+    status: "Active",
+    joined: "08 Jul 2026",
+  },
+];
