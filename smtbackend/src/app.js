@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import bannerRoutes from "./routes/banner.routes.js";
 import studentRoutes from "./routes/student.routes.js";
 import indexRoutes from "./routes/index.routes.js";
+import superAdminRoutes from "./routes/superAdmin.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
 
 const app = express();
@@ -64,6 +65,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1", indexRoutes);
 app.use("/api/banner", bannerRoutes);
 app.use("/api/student", studentRoutes);
+app.use("/api/super-admin", superAdminRoutes);
 /**
  * 404
  */
