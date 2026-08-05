@@ -26,14 +26,14 @@ export const uploadImage = (file, folder = "SkillManthan") => {
         resource_type: "image",
       },
       (error, result) => {
-        if (error) {
-          return reject(
-            new ApiError(500, "Image upload failed")
-          );
-        }
+  if (error) {
+    console.error("Cloudinary Error:", error); 
 
-        resolve(result);
-      }
+    return reject(error); 
+  }
+
+  resolve(result);
+}
     );
 
     streamifier.createReadStream(file.buffer).pipe(uploadStream);
