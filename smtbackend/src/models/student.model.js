@@ -128,17 +128,14 @@ const studentSchema = new mongoose.Schema(
  * Auto Generate Student ID
  * SMT000001
  */
-
-studentSchema.pre("save", async function (next) {
-  if (!this.isNew || this.studentId) return next();
+studentSchema.pre("save", async function () {
+  if (!this.isNew || this.studentId) return;
 
   const Student = mongoose.model("Student");
 
   const count = await Student.countDocuments();
 
   this.studentId = `SMT${String(count + 1).padStart(6, "0")}`;
-
-  next();
 });
 
 const Student = mongoose.model("Student", studentSchema);

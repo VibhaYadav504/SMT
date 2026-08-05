@@ -3,6 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import bannerRoutes from "./routes/banner.routes.js";
+import studentRoutes from "./routes/student.routes.js";
 import indexRoutes from "./routes/index.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
 
@@ -62,6 +63,7 @@ app.get("/", (req, res) => {
  */
 app.use("/api/v1", indexRoutes);
 app.use("/api/banner", bannerRoutes);
+app.use("/api/student", studentRoutes);
 /**
  * 404
  */
