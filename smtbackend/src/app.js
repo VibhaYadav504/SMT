@@ -7,6 +7,7 @@ import studentRoutes from "./routes/student.routes.js";
 import indexRoutes from "./routes/index.routes.js";
 import superAdminRoutes from "./routes/superAdmin.routes.js";
 import technologyRoutes from "./routes/technologies.routes.js";
+import courseRoutes from "./routes/course.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
 
 const app = express();
@@ -66,6 +67,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1", indexRoutes);
 app.use("/api/banner", bannerRoutes);
 app.use("/api/student", studentRoutes);
+app.use("/api/courses", courseRoutes);
 app.use("/api/super-admin", superAdminRoutes);
 app.use("/api/technologies", technologyRoutes);
 /**
