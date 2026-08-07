@@ -8,6 +8,7 @@ import indexRoutes from "./routes/index.routes.js";
 import superAdminRoutes from "./routes/superAdmin.routes.js";
 import technologyRoutes from "./routes/technologies.routes.js";
 import courseRoutes from "./routes/course.routes.js";
+import placementRoutes from "./routes/placement.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
 
 const app = express();
@@ -70,6 +71,7 @@ app.use("/api/student", studentRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/super-admin", superAdminRoutes);
 app.use("/api/technologies", technologyRoutes);
+app.use("/api/placements", placementRoutes);
 /**
  * 404
  */
