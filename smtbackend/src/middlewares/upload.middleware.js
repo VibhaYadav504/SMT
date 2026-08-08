@@ -3,18 +3,25 @@ import ApiError from "../utils/ApiError.js";
 
 /**
  * Multer Memory Storage
- * Files will be uploaded to Cloudinary directly from memory.
+ * Files will be uploaded to Cloudinary
+ * directly from memory.
  */
 const storage = multer.memoryStorage();
 
 /**
- * Allowed Image Types
+ * Allowed Image + Video Types
  */
 const allowedMimeTypes = [
+  // Images
   "image/jpeg",
   "image/jpg",
   "image/png",
   "image/webp",
+
+  // Videos
+  "video/mp4",
+  "video/webm",
+  "video/quicktime",
 ];
 
 /**
@@ -27,7 +34,7 @@ const fileFilter = (req, file, cb) => {
     cb(
       new ApiError(
         400,
-        "Only JPG, JPEG, PNG and WEBP images are allowed."
+        "Only JPG, JPEG, PNG, WEBP, MP4, WEBM and MOV files are allowed."
       ),
       false
     );
@@ -41,7 +48,7 @@ const upload = multer({
   storage,
 
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB
+    fileSize: 100 * 1024 * 1024, // 100MB
   },
 
   fileFilter,
