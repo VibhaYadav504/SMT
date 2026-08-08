@@ -1,4 +1,5 @@
 import express from "express";
+import upload from "../middlewares/upload.middleware.js";
 
 import {
   addFeedback,
@@ -10,13 +11,21 @@ import {
 
 const router = express.Router();
 
-router.post("/", addFeedback);
+router.post(
+  "/",
+  upload.single("thumbnail"),
+  addFeedback
+);
 
 router.get("/", fetchFeedbacks);
 
 router.get("/:id", fetchFeedback);
 
-router.put("/:id", editFeedback);
+router.put(
+  "/:id",
+  upload.single("thumbnail"),
+  editFeedback
+);
 
 router.delete("/:id", removeFeedback);
 

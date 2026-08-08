@@ -2,35 +2,22 @@ import mongoose from "mongoose";
 
 const feedbackSchema = new mongoose.Schema(
   {
-    name: {
+    videoUrl: {
       type: String,
       required: true,
       trim: true,
     },
 
-    email: {
-      type: String,
-      required: true,
-      trim: true,
-      lowercase: true,
-    },
-
-    message: {
+    description: {
       type: String,
       required: true,
       trim: true,
     },
 
-    rating: {
-      type: Number,
-      min: 1,
-      max: 5,
-      default: 5,
-    },
-
-    status: {
-      type: Boolean,
-      default: true,
+    thumbnail: {
+      type: String,
+      required: true,
+      trim: true,
     },
   },
   {

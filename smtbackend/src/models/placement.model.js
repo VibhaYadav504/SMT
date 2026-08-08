@@ -2,56 +2,15 @@ import mongoose from "mongoose";
 
 const placementSchema = new mongoose.Schema(
   {
-    companyName: {
+    name: {
       type: String,
       required: true,
       trim: true,
     },
 
-    companyLogo: {
+    image: {
       type: String,
       required: true,
-    },
-
-    studentName: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    studentImage: {
-      type: String,
-      required: false,
-      default: null,
-    },
-
-    package: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    designation: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-
-    location: {
-      type: String,
-      required: false,
-      trim: true,
-    },
-
-    description: {
-      type: String,
-      required: false,
-      trim: true,
-    },
-
-    status: {
-      type: Boolean,
-      default: true,
     },
   },
   {

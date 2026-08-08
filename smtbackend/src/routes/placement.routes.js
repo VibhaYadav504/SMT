@@ -1,51 +1,37 @@
 import express from "express";
-
 import upload from "../middlewares/upload.middleware.js";
 
 import {
-  addPlacement,
-  fetchPlacements,
-  fetchPlacement,
-  editPlacement,
-  removePlacement,
-} from "../controllers/placement.controller.js";
+  addFeedback,
+  fetchFeedbacks,
+  fetchFeedback,
+  editFeedback,
+  removeFeedback,
+} from "../controllers/feedback.controller.js";
 
 const router = express.Router();
 
+// Add Feedback
 router.post(
   "/",
-  upload.fields([
-    {
-      name: "companyLogo",
-      maxCount: 1,
-    },
-    {
-      name: "studentImage",
-      maxCount: 1,
-    },
-  ]),
-  addPlacement
+  upload.single("thumbnail"),
+  addFeedback
 );
 
-router.get("/", fetchPlacements);
+// Get All Feedbacks
+router.get("/", fetchFeedbacks);
 
-router.get("/:id", fetchPlacement);
+// Get Feedback By ID
+router.get("/:id", fetchFeedback);
 
+// Update Feedback
 router.put(
   "/:id",
-  upload.fields([
-    {
-      name: "companyLogo",
-      maxCount: 1,
-    },
-    {
-      name: "studentImage",
-      maxCount: 1,
-    },
-  ]),
-  editPlacement
+  upload.single("thumbnail"),
+  editFeedback
 );
 
-router.delete("/:id", removePlacement);
+// Delete Feedback
+router.delete("/:id", removeFeedback);
 
 export default router;

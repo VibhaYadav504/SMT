@@ -6,65 +6,38 @@ import {
   deletePlacement,
 } from "../services/placement.service.js";
 
-import { validatePlacement } from "../validators/placement.validator.js";
-
 import { uploadImage } from "../config/cloudinary.js";
 
 export const addPlacement = async (req, res) => {
   try {
-    const {
-      companyName,
-      studentName,
-      package: salaryPackage,
-      designation,
-      location,
-      description,
-    } = req.body;
+    const { name } = req.body;
 
-    const { isValid, errors } = validatePlacement(req.body);
-
-    if (!isValid) {
+    // Name validation
+    if (!name || !name.trim()) {
       return res.status(400).json({
         success: false,
-        errors,
+        message: "Name is required",
       });
     }
 
-    // Check company logo
-    if (!req.files?.companyLogo?.[0]) {
+    // Image validation
+    if (!req.file) {
       return res.status(400).json({
         success: false,
-        message: "Company logo is required",
+        message: "Image is required",
       });
     }
 
-    // Upload company logo
-    const uploadedCompanyLogo = await uploadImage(
-      req.files.companyLogo[0],
-      "Placements/Companies"
+    // Upload image to Cloudinary
+    const uploadedImage = await uploadImage(
+      req.file,
+      "Placements/Students"
     );
 
-    let studentImage = null;
-
-    // Upload student image if provided
-    if (req.files?.studentImage?.[0]) {
-      const uploadedStudentImage = await uploadImage(
-        req.files.studentImage[0],
-        "Placements/Students"
-      );
-
-      studentImage = uploadedStudentImage.secure_url;
-    }
-
+    // Create placement
     const placement = await createPlacement({
-      companyName,
-      companyLogo: uploadedCompanyLogo.secure_url,
-      studentName,
-      studentImage,
-      package: salaryPackage,
-      designation,
-      location,
-      description,
+      name: name.trim(),
+      image: uploadedImage.secure_url,
     });
 
     return res.status(201).json({
@@ -121,35 +94,21 @@ export const fetchPlacement = async (req, res) => {
 
 export const editPlacement = async (req, res) => {
   try {
-    const updateData = {
-      companyName: req.body.companyName,
-      studentName: req.body.studentName,
-      package: req.body.package,
-      designation: req.body.designation,
-      location: req.body.location,
-      description: req.body.description,
-    };
+    const updateData = {};
 
-    // New company logo
-    if (req.files?.companyLogo?.[0]) {
-      const uploadedCompanyLogo = await uploadImage(
-        req.files.companyLogo[0],
-        "Placements/Companies"
-      );
-
-      updateData.companyLogo =
-        uploadedCompanyLogo.secure_url;
+    // Update name
+    if (req.body.name) {
+      updateData.name = req.body.name.trim();
     }
 
-    // New student image
-    if (req.files?.studentImage?.[0]) {
-      const uploadedStudentImage = await uploadImage(
-        req.files.studentImage[0],
+    // Update image if new image is provided
+    if (req.file) {
+      const uploadedImage = await uploadImage(
+        req.file,
         "Placements/Students"
       );
 
-      updateData.studentImage =
-        uploadedStudentImage.secure_url;
+      updateData.image = uploadedImage.secure_url;
     }
 
     const placement = await updatePlacement(

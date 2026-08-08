@@ -6,34 +6,50 @@ import {
   deleteFeedback,
 } from "../services/feedback.service.js";
 
-import { validateFeedback } from "../validators/feedback.validator.js";
+import { uploadImage } from "../config/cloudinary.js";
 
 /**
  * Add Feedback
  */
 export const addFeedback = async (req, res) => {
   try {
-    const {
-      name,
-      email,
-      message,
-      rating,
-    } = req.body;
+    const { videoUrl, description } = req.body || {};
 
-    const { isValid, errors } = validateFeedback(req.body);
-
-    if (!isValid) {
+    // Video URL validation
+    if (!videoUrl || !videoUrl.trim()) {
       return res.status(400).json({
         success: false,
-        errors,
+        message: "Video URL is required",
       });
     }
 
+    // Description validation
+    if (!description || !description.trim()) {
+      return res.status(400).json({
+        success: false,
+        message: "Description is required",
+      });
+    }
+
+    // Thumbnail validation
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Thumbnail is required",
+      });
+    }
+
+    // Upload thumbnail to Cloudinary
+    const uploadedThumbnail = await uploadImage(
+      req.file,
+      "Feedback/Thumbnails"
+    );
+
+    // Save feedback
     const feedback = await createFeedback({
-      name,
-      email,
-      message,
-      rating: rating || 5,
+      videoUrl: videoUrl.trim(),
+      description: description.trim(),
+      thumbnail: uploadedThumbnail.secure_url,
     });
 
     return res.status(201).json({
@@ -105,13 +121,27 @@ export const fetchFeedback = async (req, res) => {
  */
 export const editFeedback = async (req, res) => {
   try {
-    const updateData = {
-      name: req.body.name,
-      email: req.body.email,
-      message: req.body.message,
-      rating: req.body.rating,
-      status: req.body.status,
-    };
+    const updateData = {};
+
+    // Update video URL
+    if (req.body?.videoUrl !== undefined) {
+      updateData.videoUrl = req.body.videoUrl.trim();
+    }
+
+    // Update description
+    if (req.body?.description !== undefined) {
+      updateData.description = req.body.description.trim();
+    }
+
+    // Update thumbnail
+    if (req.file) {
+      const uploadedThumbnail = await uploadImage(
+        req.file,
+        "Feedback/Thumbnails"
+      );
+
+      updateData.thumbnail = uploadedThumbnail.secure_url;
+    }
 
     const feedback = await updateFeedback(
       req.params.id,
