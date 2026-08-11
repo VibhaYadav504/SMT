@@ -9,18 +9,63 @@ import {
   removeTechnology,
 } from "../controllers/technologies.controller.js";
 
-
+import {
+  protect,
+  authorize,
+} from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/", upload.single("image"), addTechnology);
+// ============================================
+// Protected Technology Routes - Admin Only
+// ============================================
 
-router.get("/", fetchTechnologies);
+// Get All Technologies
+router.get(
+  "/",
+  protect,
+  authorize("Admin"),
+  fetchTechnologies
+);
 
-router.get("/:id", fetchTechnology);
+// Get Technology By ID
+router.get(
+  "/:id",
+  protect,
+  authorize("Admin"),
+  fetchTechnology
+);
 
-router.put("/:id", upload.single("image"), editTechnology);
+// Add Technology
+router.post(
+  "/",
+  protect,
+  authorize("Admin"),
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "pdf", maxCount: 1 },
+  ]),
+  addTechnology
+);
 
-router.delete("/:id", removeTechnology);
+// Update Technology
+router.put(
+  "/:id",
+  protect,
+  authorize("Admin"),
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "pdf", maxCount: 1 },
+  ]),
+  editTechnology
+);
+
+// Delete Technology
+router.delete(
+  "/:id",
+  protect,
+  authorize("Admin"),
+  removeTechnology
+);
 
 export default router;

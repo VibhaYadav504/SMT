@@ -1,5 +1,5 @@
-import { Router } from "express";
-import upload from "../middlewares/upload.middleware.js";
+import express from "express";
+
 import {
   createStudent,
   getAllStudents,
@@ -10,39 +10,61 @@ import {
 } from "../controllers/student.controller.js";
 
 import {
-  createStudentValidator,
-  updateStudentValidator,
-  studentIdValidator,
-  studentListValidator,
-  changeStatusValidator,
-} from "../validators/student.validator.js";
+  protect,
+  authorize,
+} from "../middlewares/auth.middleware.js";
 
-const router = Router();
+const router = express.Router();
 
-/**
- * Student CRUD
- */
+// ============================================
+// Protected Student Routes - Admin Only
+// ============================================
 
-// GET All Students
-// POST Create Student
-router
-  .route("/")
-  .get(studentListValidator, getAllStudents)
-  .post(createStudentValidator, createStudent);
+// Create Student
+router.post(
+  "/",
+  protect,
+  authorize("Admin"),
+  createStudent
+);
 
-// GET Student By ID
-// PUT Update Student
-// DELETE Student
-router
-  .route("/:id")
-  .get(studentIdValidator, getStudentById)
-  .put(updateStudentValidator, updateStudent)
-  .delete(studentIdValidator, deleteStudent);
+// Get All Students
+router.get(
+  "/",
+  protect,
+  authorize("Admin"),
+  getAllStudents
+);
+
+// Get Student By ID
+router.get(
+  "/:id",
+  protect,
+  authorize("Admin"),
+  getStudentById
+);
+
+// Update Student
+router.put(
+  "/:id",
+  protect,
+  authorize("Admin"),
+  updateStudent
+);
+
+// Delete Student
+router.delete(
+  "/:id",
+  protect,
+  authorize("Admin"),
+  deleteStudent
+);
 
 // Change Student Status
 router.patch(
   "/:id/status",
-  changeStatusValidator,
+  protect,
+  authorize("Admin"),
   changeStudentStatus
 );
 

@@ -7,12 +7,18 @@ import {
 } from "../services/technology.service.js";
 
 import { validateTechnology } from "../validators/technology.validator.js";
-import { uploadImage } from "../config/cloudinary.js";
+
+import {
+  uploadImage,
+  uploadPdf,
+} from "../config/cloudinary.js";
+
 
 export const addTechnology = async (req, res) => {
   try {
     const { title } = req.body;
 
+    // Validate body
     const { isValid, errors } = validateTechnology(req.body);
 
     if (!isValid) {
@@ -22,19 +28,43 @@ export const addTechnology = async (req, res) => {
       });
     }
 
-    if (!req.file) {
+    // Get image and PDF
+    const imageFile = req.files?.image?.[0];
+    const pdfFile = req.files?.pdf?.[0];
+
+    // Image validation
+    if (!imageFile) {
       return res.status(400).json({
         success: false,
         message: "Image is required",
       });
     }
 
-    // Upload image to Cloudinary
-    const uploadedImage = await uploadImage(req.file, "Technologies");
+    // PDF validation
+    if (!pdfFile) {
+      return res.status(400).json({
+        success: false,
+        message: "PDF is required",
+      });
+    }
 
+    // Upload image to Cloudinary
+    const uploadedImage = await uploadImage(
+      imageFile,
+      "Technologies"
+    );
+
+    // Upload PDF to Cloudinary
+    const uploadedPdf = await uploadPdf(
+      pdfFile,
+      "Technologies/PDFs"
+    );
+
+    // Save technology
     const technology = await createTechnology({
-      title,
+      title: title.trim(),
       image: uploadedImage.secure_url,
+      pdf: uploadedPdf.secure_url,
     });
 
     return res.status(201).json({
@@ -43,12 +73,15 @@ export const addTechnology = async (req, res) => {
       data: technology,
     });
   } catch (error) {
+    console.error("Add Technology Error:", error);
+
     return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
+
 
 export const fetchTechnologies = async (req, res) => {
   try {
@@ -59,12 +92,15 @@ export const fetchTechnologies = async (req, res) => {
       data: technologies,
     });
   } catch (error) {
+    console.error("Fetch Technologies Error:", error);
+
     return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
+
 
 export const fetchTechnology = async (req, res) => {
   try {
@@ -82,6 +118,8 @@ export const fetchTechnology = async (req, res) => {
       data: technology,
     });
   } catch (error) {
+    console.error("Fetch Technology Error:", error);
+
     return res.status(500).json({
       success: false,
       message: error.message,
@@ -89,19 +127,45 @@ export const fetchTechnology = async (req, res) => {
   }
 };
 
+
 export const editTechnology = async (req, res) => {
   try {
-    const updateData = {
-      title: req.body.title,
-    };
+    const updateData = {};
 
-    if (req.file) {
-      const uploadedImage = await uploadImage(req.file, "Technologies");
+    // Update title
+    if (req.body?.title !== undefined) {
+      updateData.title = req.body.title.trim();
+    }
+
+    // Get uploaded files
+    const imageFile = req.files?.image?.[0];
+    const pdfFile = req.files?.pdf?.[0];
+
+    // Update image if provided
+    if (imageFile) {
+      const uploadedImage = await uploadImage(
+        imageFile,
+        "Technologies"
+      );
 
       updateData.image = uploadedImage.secure_url;
     }
 
-    const technology = await updateTechnology(req.params.id, updateData);
+    // Update PDF if provided
+    if (pdfFile) {
+      const uploadedPdf = await uploadPdf(
+        pdfFile,
+        "Technologies/PDFs"
+      );
+
+      updateData.pdf = uploadedPdf.secure_url;
+    }
+
+    // Update database
+    const technology = await updateTechnology(
+      req.params.id,
+      updateData
+    );
 
     if (!technology) {
       return res.status(404).json({
@@ -116,12 +180,15 @@ export const editTechnology = async (req, res) => {
       data: technology,
     });
   } catch (error) {
+    console.error("Update Technology Error:", error);
+
     return res.status(500).json({
       success: false,
       message: error.message,
     });
   }
 };
+
 
 export const removeTechnology = async (req, res) => {
   try {
@@ -139,6 +206,8 @@ export const removeTechnology = async (req, res) => {
       message: "Technology deleted successfully",
     });
   } catch (error) {
+    console.error("Delete Technology Error:", error);
+
     return res.status(500).json({
       success: false,
       message: error.message,

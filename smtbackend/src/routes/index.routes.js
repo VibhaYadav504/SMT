@@ -3,8 +3,14 @@ import { Router } from "express";
 import authRoutes from "./auth.routes.js";
 import studentRoutes from "./student.routes.js";
 
+import {
+  protect,
+  authorize,
+} from "../middlewares/auth.middleware.js";
+
 const router = Router();
 
+// API Health Check
 router.get("/", (req, res) => {
   res.json({
     success: true,
@@ -12,7 +18,17 @@ router.get("/", (req, res) => {
   });
 });
 
+
 router.use("/auth", authRoutes);
-router.use("/students", studentRoutes);
+
+// ============================================
+// Protected Student Routes - Admin Only
+// ============================================
+router.use(
+  "/students",
+  protect,
+  authorize("Admin"),
+  studentRoutes
+);
 
 export default router;

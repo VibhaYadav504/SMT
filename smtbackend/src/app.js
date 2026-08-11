@@ -12,7 +12,7 @@ import placementRoutes from "./routes/placement.routes.js";
 import playlistRoutes from "./routes/playlist.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
 import feedbackRoutes from "./routes/feedback.routes.js";
-
+import authRoutes from "./routes/auth.routes.js";
 const app = express();
 
 /**
@@ -76,6 +76,7 @@ app.use("/api/technologies", technologyRoutes);
 app.use("/api/playlists", playlistRoutes);
 app.use("/api/placements", placementRoutes);
 app.use("/api/feedbacks", feedbackRoutes);
+app.use("/api/auth", authRoutes);
 /**
  * 404
  */

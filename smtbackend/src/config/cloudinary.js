@@ -17,7 +17,9 @@ cloudinary.config({
 export const uploadImage = (file, folder = "SkillManthan") => {
   return new Promise((resolve, reject) => {
     if (!file) {
-      return reject(new ApiError(400, "No file provided"));
+      return reject(
+        new ApiError(400, "No file provided")
+      );
     }
 
     const uploadStream = cloudinary.uploader.upload_stream(
@@ -62,11 +64,42 @@ export const uploadVideo = (
       },
       (error, result) => {
         if (error) {
-          console.error(
-            "Cloudinary Video Error:",
-            error
-          );
+          console.error("Cloudinary Video Error:", error);
+          return reject(error);
+        }
 
+        resolve(result);
+      }
+    );
+
+    streamifier
+      .createReadStream(file.buffer)
+      .pipe(uploadStream);
+  });
+};
+
+/**
+ * Upload PDF
+ */
+export const uploadPdf = (
+  file,
+  folder = "SkillManthan/PDFs"
+) => {
+  return new Promise((resolve, reject) => {
+    if (!file) {
+      return reject(
+        new ApiError(400, "No PDF provided")
+      );
+    }
+
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+        resource_type: "raw",
+      },
+      (error, result) => {
+        if (error) {
+          console.error("Cloudinary PDF Error:", error);
           return reject(error);
         }
 

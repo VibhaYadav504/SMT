@@ -5,6 +5,7 @@ import { superAdminLoginValidator } from "../validators/superAdmin.validator.js"
 
 const router = Router();
 
+
 router.post(
   "/login",
   superAdminLoginValidator,

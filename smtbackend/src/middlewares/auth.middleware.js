@@ -1,47 +1,64 @@
 import jwt from "jsonwebtoken";
-
 import User from "../models/user.model.js";
 import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
-/**
- * Protect Routes
- */
- export const protect = asyncHandler(async (req, res, next) => {
+export const protect = asyncHandler(async (req, res, next) => {
   let token;
 
-
-   console.log("Headers =>", req.headers);
   // Authorization Header
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    req.headers.authorization.startsWith("Bearer ")
   ) {
     token = req.headers.authorization.split(" ")[1];
   }
 
-
-  
-   // Cookie Support (Future)
+  // Cookie Support
   if (!token && req.cookies?.token) {
-     token = req.cookies.token;   }
+    token = req.cookies.token;
+  }
 
-   if (!token) {
+  if (!token) {
     throw new ApiError(401, "Unauthorized. Please login.");
   }
 
-// console.log("Authorization Header:", req.headers.authorization);
-// console.log("Cookie Token =>", req.cookies?.token);
-// console.log("Extracted Token:", token);
+  let decoded;
 
-  // Verify JWT
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  try {
+    decoded = jwt.verify(
+      token,
+      process.env.JWT_SECRET
+    );
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      throw new ApiError(
+        401,
+        "Token expired. Please login again."
+      );
+    }
 
-  // Find User
-  const user = await User.findById(decoded.id).select("-password");
+    throw new ApiError(
+      401,
+      "Invalid token."
+    );
+  }
+
+  const user = await User.findById(decoded.id)
+    .select("-password");
 
   if (!user) {
-    throw new ApiError(401, "User not found.");
+    throw new ApiError(
+      401,
+      "User not found."
+    );
+  }
+
+  if (!user.isActive) {
+    throw new ApiError(
+      401,
+      "User account is inactive."
+    );
   }
 
   req.user = user;
@@ -49,9 +66,6 @@ import asyncHandler from "../utils/asyncHandler.js";
   next();
 });
 
-/**
- * Role Based Authorization
- */
 export const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
@@ -64,4 +78,3 @@ export const authorize = (...roles) => {
     next();
   };
 };
-

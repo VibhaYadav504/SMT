@@ -9,7 +9,7 @@ import ApiError from "../utils/ApiError.js";
 const storage = multer.memoryStorage();
 
 /**
- * Allowed Image + Video Types
+ * Allowed Image + Video + PDF Types
  */
 const allowedMimeTypes = [
   // Images
@@ -22,19 +22,28 @@ const allowedMimeTypes = [
   "video/mp4",
   "video/webm",
   "video/quicktime",
+
+  // PDF
+  "application/pdf",
 ];
 
 /**
  * File Filter
  */
 const fileFilter = (req, file, cb) => {
+  console.log("Uploaded file:", {
+    fieldname: file.fieldname,
+    originalname: file.originalname,
+    mimetype: file.mimetype,
+  });
+
   if (allowedMimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(
       new ApiError(
         400,
-        "Only JPG, JPEG, PNG, WEBP, MP4, WEBM and MOV files are allowed."
+        "Only JPG, JPEG, PNG, WEBP, MP4, WEBM, MOV and PDF files are allowed."
       ),
       false
     );

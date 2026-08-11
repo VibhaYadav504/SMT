@@ -2,36 +2,60 @@ import express from "express";
 import upload from "../middlewares/upload.middleware.js";
 
 import {
-  addFeedback,
-  fetchFeedbacks,
-  fetchFeedback,
-  editFeedback,
-  removeFeedback,
-} from "../controllers/feedback.controller.js";
+  addPlacement,
+  fetchPlacements,
+  fetchPlacement,
+  editPlacement,
+  removePlacement,
+} from "../controllers/placement.controller.js";
+
+import {
+  protect,
+  authorize,
+} from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-// Add Feedback
+// Add Placement
 router.post(
   "/",
-  upload.single("thumbnail"),
-  addFeedback
+  protect,
+  authorize("Admin"),
+  upload.single("image"),
+  addPlacement
 );
 
-// Get All Feedbacks
-router.get("/", fetchFeedbacks);
+// Get All Placements
+router.get(
+  "/",
+  protect,
+  authorize("Admin"),
+  fetchPlacements
+);
 
-// Get Feedback By ID
-router.get("/:id", fetchFeedback);
+// Get Placement By ID
+router.get(
+  "/:id",
+  protect,
+  authorize("Admin"),
+  fetchPlacement
+);
 
-// Update Feedback
+// Update Placement
 router.put(
   "/:id",
-  upload.single("thumbnail"),
-  editFeedback
+  protect,
+  authorize("Admin"),
+  upload.single("image"),
+  editPlacement
 );
 
-// Delete Feedback
-router.delete("/:id", removeFeedback);
+// Delete Placement
+router.delete(
+  "/:id",
+  protect,
+  authorize("Admin"),
+  removePlacement
+);
 
 export default router;
