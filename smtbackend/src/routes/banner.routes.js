@@ -1,4 +1,5 @@
 import express from "express";
+
 import upload from "../middlewares/upload.middleware.js";
 
 import {
@@ -9,22 +10,19 @@ import {
   deleteBanner,
 } from "../controllers/bannerController.js";
 
-import {
-  protect,
-  authorize,
-} from "../middlewares/auth.middleware.js";
+import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
 
 const router = express.Router();
 
-// ============================================
-// Protected Banner Routes - Admin Only
-// ============================================
+
+// ============================
+// Super Admin Only
+// ============================
 
 // Create Banner
 router.post(
   "/",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   upload.single("image"),
   createBanner
 );
@@ -32,24 +30,21 @@ router.post(
 // Get All Banners
 router.get(
   "/",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   getAllBanners
 );
 
 // Get Banner By ID
 router.get(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   getBannerById
 );
 
 // Update Banner
 router.put(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   upload.single("image"),
   updateBanner
 );
@@ -57,8 +52,7 @@ router.put(
 // Delete Banner
 router.delete(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   deleteBanner
 );
 

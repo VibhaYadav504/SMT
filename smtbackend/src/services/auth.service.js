@@ -42,11 +42,18 @@ export const registerService = async (userData) => {
 export const loginService = async ({ email, password }) => {
   const user = await User.findOne({ email }).select("+password");
 
+  console.log("LOGIN EMAIL:", email);
+  console.log("USER FOUND:", !!user);
+
   if (!user) {
     throw new ApiError(401, "Invalid email or password");
   }
 
+  console.log("PASSWORD HASH EXISTS:", !!user.password);
+
   const isMatched = await user.comparePassword(password);
+
+  console.log("PASSWORD MATCH:", isMatched);
 
   if (!isMatched) {
     throw new ApiError(401, "Invalid email or password");
