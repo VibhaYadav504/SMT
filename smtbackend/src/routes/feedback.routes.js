@@ -1,4 +1,5 @@
 import express from "express";
+
 import upload from "../middlewares/upload.middleware.js";
 
 import {
@@ -9,38 +10,32 @@ import {
   removeFeedback,
 } from "../controllers/feedback.controller.js";
 
-import {
-  protect,
-  authorize,
-} from "../middlewares/auth.middleware.js";
+import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
 
 const router = express.Router();
 
 // ============================================
-// All Feedback Routes Protected
+// All Feedback Routes - Super Admin Only
 // ============================================
 
 // Get All Feedbacks
 router.get(
   "/",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   fetchFeedbacks
 );
 
 // Get Feedback By ID
 router.get(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   fetchFeedback
 );
 
 // Add Feedback
 router.post(
   "/",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   upload.single("thumbnail"),
   addFeedback
 );
@@ -48,8 +43,7 @@ router.post(
 // Update Feedback
 router.put(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   upload.single("thumbnail"),
   editFeedback
 );
@@ -57,8 +51,7 @@ router.put(
 // Delete Feedback
 router.delete(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   removeFeedback
 );
 

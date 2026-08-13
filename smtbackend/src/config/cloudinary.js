@@ -1,19 +1,22 @@
+import "dotenv/config";
 import { v2 as cloudinary } from "cloudinary";
 import streamifier from "streamifier";
 import ApiError from "../utils/ApiError.js";
 
-/**
- * Cloudinary Configuration
- */
+// ============================================
+// Cloudinary Configuration
+// ============================================
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-/**
- * Upload Single Image
- */
+// ============================================
+// Upload Single Image
+// ============================================
+
 export const uploadImage = (file, folder = "SkillManthan") => {
   return new Promise((resolve, reject) => {
     if (!file) {
@@ -43,9 +46,10 @@ export const uploadImage = (file, folder = "SkillManthan") => {
   });
 };
 
-/**
- * Upload Video
- */
+// ============================================
+// Upload Video
+// ============================================
+
 export const uploadVideo = (
   file,
   folder = "SkillManthan/Videos"
@@ -78,9 +82,10 @@ export const uploadVideo = (
   });
 };
 
-/**
- * Upload PDF
- */
+// ============================================
+// Upload PDF
+// ============================================
+
 export const uploadPdf = (
   file,
   folder = "SkillManthan/PDFs"
@@ -113,9 +118,10 @@ export const uploadPdf = (
   });
 };
 
-/**
- * Upload Multiple Images
- */
+// ============================================
+// Upload Multiple Images
+// ============================================
+
 export const uploadMultipleImages = async (
   files,
   folder = "SkillManthan"
@@ -134,18 +140,20 @@ export const uploadMultipleImages = async (
   return uploadedImages;
 };
 
-/**
- * Delete Image
- */
+// ============================================
+// Delete Image
+// ============================================
+
 export const deleteImage = async (publicId) => {
   if (!publicId) return;
 
   await cloudinary.uploader.destroy(publicId);
 };
 
-/**
- * Delete Video
- */
+// ============================================
+// Delete Video
+// ============================================
+
 export const deleteVideo = async (publicId) => {
   if (!publicId) return;
 

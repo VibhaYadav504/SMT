@@ -1,4 +1,5 @@
 import express from "express";
+
 import upload from "../middlewares/upload.middleware.js";
 
 import {
@@ -9,18 +10,18 @@ import {
   removePlaylist,
 } from "../controllers/playlist.controller.js";
 
-import {
-  protect,
-  authorize,
-} from "../middlewares/auth.middleware.js";
+import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
 
 const router = express.Router();
+
+// ============================================
+// Playlist Routes - Super Admin Only
+// ============================================
 
 // Add Playlist
 router.post(
   "/",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   upload.single("thumbnail"),
   addPlaylist
 );
@@ -28,24 +29,21 @@ router.post(
 // Get All Playlists
 router.get(
   "/",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   fetchPlaylists
 );
 
 // Get Playlist By ID
 router.get(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   fetchPlaylist
 );
 
 // Update Playlist
 router.put(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   upload.single("thumbnail"),
   editPlaylist
 );
@@ -53,8 +51,7 @@ router.put(
 // Delete Playlist
 router.delete(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   removePlaylist
 );
 

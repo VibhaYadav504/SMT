@@ -10,22 +10,18 @@ import {
   removeCourse,
 } from "../controllers/course.controller.js";
 
-import {
-  protect,
-  authorize,
-} from "../middlewares/auth.middleware.js";
+import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
 
 const router = express.Router();
 
 // ============================================
-// Protected Course Routes - Admin Only
+// Protected Course Routes - Super Admin Only
 // ============================================
 
 // Add Course
 router.post(
   "/",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   upload.single("image"),
   addCourse
 );
@@ -33,24 +29,21 @@ router.post(
 // Get All Courses
 router.get(
   "/",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   fetchCourses
 );
 
 // Get Course By ID
 router.get(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   fetchCourse
 );
 
 // Update Course
 router.put(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   upload.single("image"),
   editCourse
 );
@@ -58,8 +51,7 @@ router.put(
 // Delete Course
 router.delete(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   removeCourse
 );
 

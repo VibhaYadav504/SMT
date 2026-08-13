@@ -7,7 +7,9 @@ import sendEmail from "../utils/sendEmail.js";
 import otpTemplate from "../templates/otpTemplate.js";
 
 /**
+ * ============================================
  * Register User
+ * ============================================
  */
 export const registerService = async (userData) => {
   const { email, phone } = userData;
@@ -26,9 +28,13 @@ export const registerService = async (userData) => {
     throw new ApiError(409, "Phone number already exists");
   }
 
+  // Create User
   const user = await User.create(userData);
 
-  const token = generateToken(user._id);
+const token = generateToken(user._id);
+
+// Password response se remove karo
+user.password = undefined;
 
   return {
     user,
@@ -37,37 +43,50 @@ export const registerService = async (userData) => {
 };
 
 /**
+ * ============================================
  * Login User
+ * ============================================
  */
 export const loginService = async ({ email, password }) => {
+  // Find user and explicitly select password
   const user = await User.findOne({ email }).select("+password");
 
+  // Debug Logs
   console.log("LOGIN EMAIL:", email);
   console.log("USER FOUND:", !!user);
 
+  // User not found
   if (!user) {
     throw new ApiError(401, "Invalid email or password");
   }
 
+  // Check password hash
   console.log("PASSWORD HASH EXISTS:", !!user.password);
 
+  // Compare password
   const isMatched = await user.comparePassword(password);
 
+  // Debug password result
   console.log("PASSWORD MATCH:", isMatched);
 
+  // Password incorrect
   if (!isMatched) {
     throw new ApiError(401, "Invalid email or password");
   }
 
+  // Check account status
   if (!user.isActive) {
     throw new ApiError(403, "Your account has been deactivated");
   }
 
+  // Update last login
   user.lastLogin = new Date();
   await user.save();
 
+  // Generate JWT token
   const token = generateToken(user._id);
 
+  // Remove password from response
   user.password = undefined;
 
   return {
@@ -77,7 +96,9 @@ export const loginService = async ({ email, password }) => {
 };
 
 /**
+ * ============================================
  * Get Profile
+ * ============================================
  */
 export const getProfileService = async (userId) => {
   const user = await User.findById(userId);
@@ -90,7 +111,9 @@ export const getProfileService = async (userId) => {
 };
 
 /**
+ * ============================================
  * Update Profile
+ * ============================================
  */
 export const updateProfileService = async (userId, data) => {
   const user = await User.findById(userId);
@@ -99,16 +122,14 @@ export const updateProfileService = async (userId, data) => {
     throw new ApiError(404, "User not found");
   }
 
+  // Check phone number
   if (data.phone && data.phone !== user.phone) {
     const exists = await User.findOne({
       phone: data.phone,
     });
 
     if (exists) {
-      throw new ApiError(
-        409,
-        "Phone number already exists"
-      );
+      throw new ApiError(409, "Phone number already exists");
     }
   }
 
@@ -125,7 +146,9 @@ export const updateProfileService = async (userId, data) => {
 };
 
 /**
+ * ============================================
  * Change Password
+ * ============================================
  */
 export const changePasswordService = async (
   userId,
@@ -138,21 +161,28 @@ export const changePasswordService = async (
     throw new ApiError(404, "User not found");
   }
 
+  // Compare old password
   const isMatched = await user.comparePassword(oldPassword);
 
   if (!isMatched) {
     throw new ApiError(401, "Old password is incorrect");
   }
 
+  // Set new password
   user.password = newPassword;
 
+  // Save
+  // Password will be automatically hashed
+  // by user.model.js pre-save middleware
   await user.save();
 
   return true;
 };
 
 /**
+ * ============================================
  * Forgot Password
+ * ============================================
  */
 export const forgotPasswordService = async ({ email }) => {
   const user = await User.findOne({ email }).select(
@@ -171,6 +201,7 @@ export const forgotPasswordService = async ({ email }) => {
 
   // Save OTP
   user.resetOtp = hashedOtp;
+
   user.resetOtpExpire = new Date(
     Date.now() +
       Number(process.env.OTP_EXPIRE) * 60 * 1000
@@ -191,7 +222,9 @@ export const forgotPasswordService = async ({ email }) => {
 };
 
 /**
+ * ============================================
  * Verify Reset OTP
+ * ============================================
  */
 export const verifyResetOtpService = async ({
   email,
@@ -219,10 +252,12 @@ export const verifyResetOtpService = async ({
     );
   }
 
+  // Check OTP expiry
   if (user.resetOtpExpire < Date.now()) {
     throw new ApiError(400, "OTP has expired");
   }
 
+  // Compare OTP
   const isOtpValid = await bcrypt.compare(
     otp,
     user.resetOtp
@@ -232,6 +267,7 @@ export const verifyResetOtpService = async ({
     throw new ApiError(400, "Invalid OTP");
   }
 
+  // Mark OTP verified
   user.isOtpVerified = true;
 
   await user.save();
@@ -242,7 +278,9 @@ export const verifyResetOtpService = async ({
 };
 
 /**
+ * ============================================
  * Reset Password
+ * ============================================
  */
 export const resetPasswordService = async ({
   email,
@@ -256,6 +294,7 @@ export const resetPasswordService = async ({
     );
   }
 
+  // Check password confirmation
   if (newPassword !== confirmPassword) {
     throw new ApiError(
       400,
@@ -271,6 +310,7 @@ export const resetPasswordService = async ({
     throw new ApiError(404, "User not found");
   }
 
+  // Check OTP verification
   if (!user.isOtpVerified) {
     throw new ApiError(
       400,
@@ -286,6 +326,8 @@ export const resetPasswordService = async ({
   user.resetOtpExpire = undefined;
   user.isOtpVerified = false;
 
+  // Save
+  // Password will be automatically hashed
   await user.save();
 
   return {

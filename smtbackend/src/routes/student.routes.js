@@ -9,62 +9,53 @@ import {
   changeStudentStatus,
 } from "../controllers/student.controller.js";
 
-import {
-  protect,
-  authorize,
-} from "../middlewares/auth.middleware.js";
+import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
 
 const router = express.Router();
 
 // ============================================
-// Protected Student Routes - Admin Only
+// Protected Student Routes - Super Admin Only
 // ============================================
 
 // Create Student
 router.post(
   "/",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   createStudent
 );
 
 // Get All Students
 router.get(
   "/",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   getAllStudents
 );
 
 // Get Student By ID
 router.get(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   getStudentById
 );
 
 // Update Student
 router.put(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   updateStudent
 );
 
 // Delete Student
 router.delete(
   "/:id",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   deleteStudent
 );
 
 // Change Student Status
 router.patch(
   "/:id/status",
-  protect,
-  authorize("Admin"),
+  protectSuperAdmin,
   changeStudentStatus
 );
 
