@@ -15,10 +15,10 @@ import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
 const router = express.Router();
 
 // ============================================
-// Protected Course Routes - Super Admin Only
+// Course Routes
 // ============================================
 
-// Add Course
+// Add Course - Super Admin Only
 router.post(
   "/",
   protectSuperAdmin,
@@ -26,21 +26,19 @@ router.post(
   addCourse
 );
 
-// Get All Courses
+// Get All Courses - Public
 router.get(
   "/",
-  protectSuperAdmin,
   fetchCourses
 );
 
-// Get Course By ID
+// Get Course By ID - Public
 router.get(
   "/:id",
-  protectSuperAdmin,
   fetchCourse
 );
 
-// Update Course
+// Update Course - Super Admin Only
 router.put(
   "/:id",
   protectSuperAdmin,
@@ -48,7 +46,7 @@ router.put(
   editCourse
 );
 
-// Delete Course
+// Delete Course - Super Admin Only
 router.delete(
   "/:id",
   protectSuperAdmin,

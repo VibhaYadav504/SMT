@@ -15,24 +15,22 @@ import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
 const router = express.Router();
 
 // ============================================
-// All Feedback Routes - Super Admin Only
+// Feedback Routes
 // ============================================
 
-// Get All Feedbacks
+// Get All Feedbacks - Public
 router.get(
   "/",
-  protectSuperAdmin,
   fetchFeedbacks
 );
 
-// Get Feedback By ID
+// Get Feedback By ID - Public
 router.get(
   "/:id",
-  protectSuperAdmin,
   fetchFeedback
 );
 
-// Add Feedback
+// Add Feedback - Super Admin Only
 router.post(
   "/",
   protectSuperAdmin,
@@ -40,7 +38,7 @@ router.post(
   addFeedback
 );
 
-// Update Feedback
+// Update Feedback - Super Admin Only
 router.put(
   "/:id",
   protectSuperAdmin,
@@ -48,7 +46,7 @@ router.put(
   editFeedback
 );
 
-// Delete Feedback
+// Delete Feedback - Super Admin Only
 router.delete(
   "/:id",
   protectSuperAdmin,

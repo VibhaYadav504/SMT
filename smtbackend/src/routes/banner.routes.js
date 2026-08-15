@@ -1,5 +1,4 @@
 import express from "express";
-
 import upload from "../middlewares/upload.middleware.js";
 
 import {
@@ -14,6 +13,17 @@ import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
 
 const router = express.Router();
 
+// ============================
+// Public Banner Routes
+// Students can view banners
+// ============================
+
+// Get All Banners
+router.get("/", getAllBanners);
+
+// Get Banner By ID
+router.get("/:id", getBannerById);
+
 
 // ============================
 // Super Admin Only
@@ -25,20 +35,6 @@ router.post(
   protectSuperAdmin,
   upload.single("image"),
   createBanner
-);
-
-// Get All Banners
-router.get(
-  "/",
-  protectSuperAdmin,
-  getAllBanners
-);
-
-// Get Banner By ID
-router.get(
-  "/:id",
-  protectSuperAdmin,
-  getBannerById
 );
 
 // Update Banner

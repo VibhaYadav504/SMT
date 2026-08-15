@@ -14,45 +14,43 @@ import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
 const router = express.Router();
 
 // ============================================
-// Protected Student Routes - Super Admin Only
+// Student Routes
 // ============================================
 
-// Create Student
+// Create Student - Super Admin Only
 router.post(
   "/",
   protectSuperAdmin,
   createStudent
 );
 
-// Get All Students
+// Get All Students - Public
 router.get(
   "/",
-  protectSuperAdmin,
   getAllStudents
 );
 
-// Get Student By ID
+// Get Student By ID - Public
 router.get(
   "/:id",
-  protectSuperAdmin,
   getStudentById
 );
 
-// Update Student
+// Update Student - Super Admin Only
 router.put(
   "/:id",
   protectSuperAdmin,
   updateStudent
 );
 
-// Delete Student
+// Delete Student - Super Admin Only
 router.delete(
   "/:id",
   protectSuperAdmin,
   deleteStudent
 );
 
-// Change Student Status
+// Change Student Status - Super Admin Only
 router.patch(
   "/:id/status",
   protectSuperAdmin,

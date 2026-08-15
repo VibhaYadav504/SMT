@@ -15,10 +15,10 @@ import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
 const router = express.Router();
 
 // ============================================
-// Playlist Routes - Super Admin Only
+// Playlist Routes
 // ============================================
 
-// Add Playlist
+// Add Playlist - Super Admin Only
 router.post(
   "/",
   protectSuperAdmin,
@@ -26,21 +26,19 @@ router.post(
   addPlaylist
 );
 
-// Get All Playlists
+// Get All Playlists - Public (No Token Required)
 router.get(
   "/",
-  protectSuperAdmin,
   fetchPlaylists
 );
 
-// Get Playlist By ID
+// Get Playlist By ID - Public (No Token Required)
 router.get(
   "/:id",
-  protectSuperAdmin,
   fetchPlaylist
 );
 
-// Update Playlist
+// Update Playlist - Super Admin Only
 router.put(
   "/:id",
   protectSuperAdmin,
@@ -48,7 +46,7 @@ router.put(
   editPlaylist
 );
 
-// Delete Playlist
+// Delete Playlist - Super Admin Only
 router.delete(
   "/:id",
   protectSuperAdmin,

@@ -15,10 +15,10 @@ import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
 const router = express.Router();
 
 // ============================================
-// Placement Routes - Super Admin Only
+// Placement Routes
 // ============================================
 
-// Add Placement
+// Add Placement - Super Admin Only
 router.post(
   "/",
   protectSuperAdmin,
@@ -26,21 +26,19 @@ router.post(
   addPlacement
 );
 
-// Get All Placements
+// Get All Placements - Public
 router.get(
   "/",
-  protectSuperAdmin,
   fetchPlacements
 );
 
-// Get Placement By ID
+// Get Placement By ID - Public
 router.get(
   "/:id",
-  protectSuperAdmin,
   fetchPlacement
 );
 
-// Update Placement
+// Update Placement - Super Admin Only
 router.put(
   "/:id",
   protectSuperAdmin,
@@ -48,7 +46,7 @@ router.put(
   editPlacement
 );
 
-// Delete Placement
+// Delete Placement - Super Admin Only
 router.delete(
   "/:id",
   protectSuperAdmin,

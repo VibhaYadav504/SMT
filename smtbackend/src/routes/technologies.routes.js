@@ -14,23 +14,23 @@ import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
 
 const router = express.Router();
 
+// ============================================
+// Technology Routes
+// ============================================
 
-
-// Get All Technologies
+// Get All Technologies - Public
 router.get(
   "/",
-  protectSuperAdmin,
   fetchTechnologies
 );
 
-// Get Technology By ID
+// Get Technology By ID - Public
 router.get(
   "/:id",
-  protectSuperAdmin,
   fetchTechnology
 );
 
-// Add Technology
+// Add Technology - Super Admin Only
 router.post(
   "/",
   protectSuperAdmin,
@@ -41,7 +41,7 @@ router.post(
   addTechnology
 );
 
-// Update Technology
+// Update Technology - Super Admin Only
 router.put(
   "/:id",
   protectSuperAdmin,
@@ -52,7 +52,7 @@ router.put(
   editTechnology
 );
 
-// Delete Technology
+// Delete Technology - Super Admin Only
 router.delete(
   "/:id",
   protectSuperAdmin,
