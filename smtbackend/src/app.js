@@ -22,7 +22,6 @@ const app = express();
  * Global Middlewares
  * ============================
  */
-
 // Allowed Origins
 const allowedOrigins = [
   "http://localhost:5173",

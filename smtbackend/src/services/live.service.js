@@ -1,129 +1,105 @@
 import Live from "../models/live.model.js";
-import { uploadVideo } from "../config/cloudinary.js";
 
 // ============================================
 // CREATE LIVE
 // ============================================
 
-export const createLiveService = async (data, file) => {
+export const createLiveService = async (data) => {
   const {
     title,
+    thumbnail,
     description,
-    isLive,
-    isActive,
+    meetUrl,
   } = data;
 
+  // Required field validation
   if (!title) {
     throw new Error("Title is required");
   }
 
-  if (!file) {
-    throw new Error("Video file is required");
+  if (!thumbnail) {
+    throw new Error("Thumbnail is required");
   }
 
-  const uploadedVideo = await uploadVideo(
-    file,
-    "SkillManthan/live"
-  );
+  if (!meetUrl) {
+    throw new Error("Google Meet URL is required");
+  }
 
+  // Create Live
   const live = await Live.create({
     title,
-    description,
-
-    isLive:
-      isLive === "true" || isLive === true,
-
-    isActive:
-      isActive === undefined
-        ? true
-        : isActive === "true" || isActive === true,
-
-    video: {
-      url: uploadedVideo.secure_url,
-      publicId: uploadedVideo.public_id,
-    },
+    thumbnail,
+    description: description || "",
+    meetUrl,
   });
 
   return live;
 };
 
+
 // ============================================
-// GET ALL LIVE
+// GET ALL LIVES
 // ============================================
 
 export const getLivesService = async () => {
-  return await Live.find({
-    isActive: true,
-  }).sort({
-    createdAt: -1,
-  });
+  const lives = await Live.find()
+    .sort({ createdAt: -1 });
+
+  return lives;
 };
 
+
 // ============================================
-// GET SINGLE LIVE
+// GET LIVE BY ID
 // ============================================
 
 export const getLiveByIdService = async (id) => {
-  return await Live.findById(id);
+  const live = await Live.findById(id);
+
+  return live;
 };
+
 
 // ============================================
 // UPDATE LIVE
 // ============================================
 
-export const updateLiveService = async (
-  id,
-  data,
-  file
-) => {
+export const updateLiveService = async (id, data) => {
   const live = await Live.findById(id);
 
   if (!live) {
-    throw new Error("Live video not found");
+    throw new Error("Live not found");
   }
 
   const {
     title,
+    thumbnail,
     description,
-    isLive,
-    isActive,
+    meetUrl,
   } = data;
 
+  // Update only provided fields
   if (title !== undefined) {
     live.title = title;
+  }
+
+  if (thumbnail !== undefined) {
+    live.thumbnail = thumbnail;
   }
 
   if (description !== undefined) {
     live.description = description;
   }
 
-  if (isLive !== undefined) {
-    live.isLive =
-      isLive === "true" || isLive === true;
-  }
-
-  if (isActive !== undefined) {
-    live.isActive =
-      isActive === "true" || isActive === true;
-  }
-
-  // New video
-  if (file) {
-    const uploadedVideo = await uploadVideo(
-      file,
-      "SkillManthan/live"
-    );
-
-    live.video = {
-      url: uploadedVideo.secure_url,
-      publicId: uploadedVideo.public_id,
-    };
+  if (meetUrl !== undefined) {
+    live.meetUrl = meetUrl;
   }
 
   await live.save();
 
   return live;
 };
+
 
 // ============================================
 // DELETE LIVE
@@ -133,10 +109,10 @@ export const deleteLiveService = async (id) => {
   const live = await Live.findById(id);
 
   if (!live) {
-    throw new Error("Live video not found");
+    throw new Error("Live not found");
   }
 
-  await live.deleteOne();
+  await Live.findByIdAndDelete(id);
 
-  return live;
+  return true;
 };

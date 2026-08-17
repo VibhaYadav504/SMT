@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const liveSchema = new mongoose.Schema(
   {
-    title: {
+    thumbnail: {
       type: String,
       required: true,
       trim: true,
@@ -14,26 +14,10 @@ const liveSchema = new mongoose.Schema(
       default: "",
     },
 
-    video: {
-      url: {
-        type: String,
-        required: true,
-      },
-
-      publicId: {
-        type: String,
-        required: true,
-      },
-    },
-
-    isLive: {
-      type: Boolean,
-      default: false,
-    },
-
-    isActive: {
-      type: Boolean,
-      default: true,
+    meetUrl: {
+      type: String,
+      required: true,
+      trim: true,
     },
   },
   {

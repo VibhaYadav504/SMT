@@ -12,14 +12,11 @@ import {
 
 export const createLive = async (req, res) => {
   try {
-    const live = await createLiveService(
-      req.body,
-      req.file
-    );
+    const live = await createLiveService(req.body);
 
     return res.status(201).json({
       success: true,
-      message: "Live video created successfully",
+      message: "Live created successfully",
       data: live,
     });
   } catch (error) {
@@ -50,7 +47,7 @@ export const getLives = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch live videos",
+      message: "Failed to fetch lives",
     });
   }
 };
@@ -61,14 +58,12 @@ export const getLives = async (req, res) => {
 
 export const getLiveById = async (req, res) => {
   try {
-    const live = await getLiveByIdService(
-      req.params.id
-    );
+    const live = await getLiveByIdService(req.params.id);
 
     if (!live) {
       return res.status(404).json({
         success: false,
-        message: "Live video not found",
+        message: "Live not found",
       });
     }
 
@@ -77,14 +72,11 @@ export const getLiveById = async (req, res) => {
       data: live,
     });
   } catch (error) {
-    console.error(
-      "Get Live By ID Error:",
-      error
-    );
+    console.error("Get Live By ID Error:", error);
 
     return res.status(500).json({
       success: false,
-      message: "Failed to fetch live video",
+      message: "Failed to fetch live",
     });
   }
 };
@@ -97,20 +89,19 @@ export const updateLive = async (req, res) => {
   try {
     const live = await updateLiveService(
       req.params.id,
-      req.body,
-      req.file
+      req.body
     );
 
     return res.status(200).json({
       success: true,
-      message: "Live video updated successfully",
+      message: "Live updated successfully",
       data: live,
     });
   } catch (error) {
     console.error("Update Live Error:", error);
 
     const statusCode =
-      error.message === "Live video not found"
+      error.message === "Live not found"
         ? 404
         : 400;
 
@@ -131,13 +122,13 @@ export const deleteLive = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: "Live video deleted successfully",
+      message: "Live deleted successfully",
     });
   } catch (error) {
     console.error("Delete Live Error:", error);
 
     const statusCode =
-      error.message === "Live video not found"
+      error.message === "Live not found"
         ? 404
         : 500;
 
