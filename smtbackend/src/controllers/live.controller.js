@@ -6,13 +6,32 @@ import {
   deleteLiveService,
 } from "../services/live.service.js";
 
+import { uploadImage } from "../config/cloudinary.js";
+
 // ============================================
-// CREATE
+// CREATE LIVE
 // ============================================
 
 export const createLive = async (req, res) => {
   try {
-    const live = await createLiveService(req.body);
+    console.log("Uploaded file:", req.file);
+
+    let thumbnail = "";
+
+    // Upload thumbnail to Cloudinary
+    if (req.file) {
+      const uploadedImage = await uploadImage(
+        req.file,
+        "SkillManthan/Live"
+      );
+
+      thumbnail = uploadedImage.secure_url;
+    }
+
+    const live = await createLiveService({
+      ...req.body,
+      thumbnail,
+    });
 
     return res.status(201).json({
       success: true,
@@ -22,7 +41,7 @@ export const createLive = async (req, res) => {
   } catch (error) {
     console.error("Create Live Error:", error);
 
-    return res.status(400).json({
+    return res.status(error.statusCode || 400).json({
       success: false,
       message: error.message,
     });
@@ -82,14 +101,28 @@ export const getLiveById = async (req, res) => {
 };
 
 // ============================================
-// UPDATE
+// UPDATE LIVE
 // ============================================
 
 export const updateLive = async (req, res) => {
   try {
+    const data = {
+      ...req.body,
+    };
+
+    // Upload new thumbnail if provided
+    if (req.file) {
+      const uploadedImage = await uploadImage(
+        req.file,
+        "SkillManthan/Live"
+      );
+
+      data.thumbnail = uploadedImage.secure_url;
+    }
+
     const live = await updateLiveService(
       req.params.id,
-      req.body
+      data
     );
 
     return res.status(200).json({
@@ -113,7 +146,7 @@ export const updateLive = async (req, res) => {
 };
 
 // ============================================
-// DELETE
+// DELETE LIVE
 // ============================================
 
 export const deleteLive = async (req, res) => {

@@ -26,20 +26,23 @@ router.get("/:id", getLiveById);
 // SUPER ADMIN PROTECTED
 // ============================================
 
+// CREATE LIVE
 router.post(
   "/",
   protectSuperAdmin,
-  upload.single("video"),
+  upload.single("thumbnail"),
   createLive
 );
 
+// UPDATE LIVE
 router.put(
   "/:id",
   protectSuperAdmin,
-  upload.single("video"),
+  upload.single("thumbnail"),
   updateLive
 );
 
+// DELETE LIVE
 router.delete(
   "/:id",
   protectSuperAdmin,
