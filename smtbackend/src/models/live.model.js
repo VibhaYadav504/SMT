@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 
 const liveSchema = new mongoose.Schema(
   {
+    title: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
     thumbnail: {
       type: String,
       required: true,
