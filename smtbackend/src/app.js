@@ -14,6 +14,7 @@ import errorHandler from "./middlewares/error.middleware.js";
 import liveRoutes from "./routes/live.routes.js";
 import feedbackRoutes from "./routes/feedback.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import introCourseRoutes from "./routes/introcourse.routes.js";
 
 const app = express();
 
@@ -79,6 +80,10 @@ app.use("/api/placements", placementRoutes);
 app.use("/api/feedbacks", feedbackRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/live", liveRoutes);
+app.use(
+  "/api/introcourse",
+  introCourseRoutes
+);
 /**
  * 404
  */
