@@ -18,15 +18,17 @@ const router = express.Router();
 // PUBLIC
 // ============================================
 
+// Get All Lives
 router.get("/", getLives);
 
+// Get Live By ID
 router.get("/:id", getLiveById);
 
 // ============================================
 // SUPER ADMIN PROTECTED
 // ============================================
 
-// CREATE LIVE
+// Create Live
 router.post(
   "/",
   protectSuperAdmin,
@@ -34,7 +36,7 @@ router.post(
   createLive
 );
 
-// UPDATE LIVE
+// Update Live
 router.put(
   "/:id",
   protectSuperAdmin,
@@ -42,7 +44,7 @@ router.put(
   updateLive
 );
 
-// DELETE LIVE
+// Delete Live
 router.delete(
   "/:id",
   protectSuperAdmin,

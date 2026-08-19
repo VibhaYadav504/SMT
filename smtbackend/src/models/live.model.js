@@ -25,6 +25,11 @@ const liveSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
+    startTime: {
+      type: Date,
+      required: true,
+    },
   },
   {
     timestamps: true,

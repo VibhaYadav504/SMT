@@ -15,6 +15,7 @@ import { uploadImage } from "../config/cloudinary.js";
 export const createLive = async (req, res) => {
   try {
     console.log("Uploaded file:", req.file);
+    console.log("Live Body:", req.body);
 
     let thumbnail = "";
 
@@ -49,7 +50,7 @@ export const createLive = async (req, res) => {
 };
 
 // ============================================
-// GET ALL
+// GET ALL LIVES
 // ============================================
 
 export const getLives = async (req, res) => {
@@ -72,7 +73,7 @@ export const getLives = async (req, res) => {
 };
 
 // ============================================
-// GET BY ID
+// GET LIVE BY ID
 // ============================================
 
 export const getLiveById = async (req, res) => {
@@ -110,6 +111,9 @@ export const updateLive = async (req, res) => {
       ...req.body,
     };
 
+    console.log("Update Live Body:", req.body);
+    console.log("Updated File:", req.file);
+
     // Upload new thumbnail if provided
     if (req.file) {
       const uploadedImage = await uploadImage(
@@ -120,6 +124,7 @@ export const updateLive = async (req, res) => {
       data.thumbnail = uploadedImage.secure_url;
     }
 
+    // Update live
     const live = await updateLiveService(
       req.params.id,
       data
