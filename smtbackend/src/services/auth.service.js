@@ -30,8 +30,7 @@ export const registerService = async (userData) => {
 
   // Create User
   const user = await User.create(userData);
-
-const token = generateToken(user._id);
+const token = generateToken(user._id, user.role);
 
 // Password response se remove karo
 user.password = undefined;
@@ -84,7 +83,7 @@ export const loginService = async ({ email, password }) => {
   await user.save();
 
   // Generate JWT token
-  const token = generateToken(user._id);
+const token = generateToken(user._id, user.role);
 
   // Remove password from response
   user.password = undefined;

@@ -8,9 +8,7 @@ import {
   deleteIntroCourse,
 } from "../controllers/introcourse.controller.js";
 
-import {
-  protectSuperAdmin,
-} from "../middlewares/superAdmin.middleware.js";
+import { protect } from "../middlewares/admin.middleware.js";
 
 import upload from "../middlewares/upload.middleware.js";
 
@@ -33,13 +31,13 @@ router.get(
 );
 
 // ============================================
-// SUPER ADMIN PROTECTED
+// ADMIN PROTECTED
 // ============================================
 
 // Create Intro Course
 router.post(
   "/",
-  protectSuperAdmin,
+  protect,
   upload.single("thumbnail"),
   createIntroCourse
 );
@@ -47,7 +45,7 @@ router.post(
 // Update Intro Course
 router.put(
   "/:id",
-  protectSuperAdmin,
+  protect,
   upload.single("thumbnail"),
   updateIntroCourse
 );
@@ -55,7 +53,7 @@ router.put(
 // Delete Intro Course
 router.delete(
   "/:id",
-  protectSuperAdmin,
+  protect,
   deleteIntroCourse
 );
 

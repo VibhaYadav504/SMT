@@ -3,9 +3,9 @@ import cors from "cors";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import bannerRoutes from "./routes/banner.routes.js";
-import studentRoutes from "./routes/student.routes.js";
+
 import indexRoutes from "./routes/index.routes.js";
-import superAdminRoutes from "./routes/superAdmin.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
 import technologyRoutes from "./routes/technologies.routes.js";
 import courseRoutes from "./routes/course.routes.js";
 import placementRoutes from "./routes/placement.routes.js";
@@ -13,7 +13,7 @@ import playlistRoutes from "./routes/playlist.routes.js";
 import errorHandler from "./middlewares/error.middleware.js";
 import liveRoutes from "./routes/live.routes.js";
 import feedbackRoutes from "./routes/feedback.routes.js";
-import authRoutes from "./routes/auth.routes.js";
+
 import introCourseRoutes from "./routes/introcourse.routes.js";
 
 const app = express();
@@ -71,14 +71,13 @@ app.get("/", (req, res) => {
  */
 app.use("/api/v1", indexRoutes);
 app.use("/api/banner", bannerRoutes);
-app.use("/api/student", studentRoutes);
 app.use("/api/courses", courseRoutes);
-app.use("/api/super-admin", superAdminRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/api/technologies", technologyRoutes);
 app.use("/api/playlists", playlistRoutes);
 app.use("/api/placements", placementRoutes);
 app.use("/api/feedbacks", feedbackRoutes);
-app.use("/api/auth", authRoutes);
+
 app.use("/api/live", liveRoutes);
 app.use(
   "/api/introcourse",

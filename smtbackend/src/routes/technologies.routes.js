@@ -1,5 +1,4 @@
 import express from "express";
-
 import upload from "../middlewares/upload.middleware.js";
 
 import {
@@ -10,30 +9,17 @@ import {
   removeTechnology,
 } from "../controllers/technologies.controller.js";
 
-import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
+import { protect } from "../middlewares/admin.middleware.js";
 
 const router = express.Router();
 
-// ============================================
-// Technology Routes
-// ============================================
+router.get("/", fetchTechnologies);
 
-// Get All Technologies - Public
-router.get(
-  "/",
-  fetchTechnologies
-);
+router.get("/:id", fetchTechnology);
 
-// Get Technology By ID - Public
-router.get(
-  "/:id",
-  fetchTechnology
-);
-
-// Add Technology - Super Admin Only
 router.post(
   "/",
-  protectSuperAdmin,
+  protect,
   upload.fields([
     { name: "image", maxCount: 1 },
     { name: "pdf", maxCount: 1 },
@@ -41,10 +27,9 @@ router.post(
   addTechnology
 );
 
-// Update Technology - Super Admin Only
 router.put(
   "/:id",
-  protectSuperAdmin,
+  protect,
   upload.fields([
     { name: "image", maxCount: 1 },
     { name: "pdf", maxCount: 1 },
@@ -52,10 +37,9 @@ router.put(
   editTechnology
 );
 
-// Delete Technology - Super Admin Only
 router.delete(
   "/:id",
-  protectSuperAdmin,
+  protect,
   removeTechnology
 );
 

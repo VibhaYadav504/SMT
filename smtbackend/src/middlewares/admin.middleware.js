@@ -1,13 +1,13 @@
 import jwt from "jsonwebtoken";
-import User from "../models/user.model.js";
+import Admin from "../models/admin.model.js";
 import ApiError from "../utils/ApiError.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 // ======================================================
-// USER / STUDENT PROTECT MIDDLEWARE
+// ADMIN PROTECT MIDDLEWARE
 // ======================================================
 
-export const protectUser = asyncHandler(async (req, res, next) => {
+export const protect = asyncHandler(async (req, res, next) => {
   let token;
 
   // ==================================================
@@ -36,12 +36,12 @@ export const protectUser = asyncHandler(async (req, res, next) => {
   if (!token) {
     throw new ApiError(
       401,
-      "Unauthorized. Please login."
+      "Unauthorized. Please login as Admin."
     );
   }
 
   // ==================================================
-  // 4. VERIFY TOKEN
+  // 4. VERIFY JWT TOKEN
   // ==================================================
 
   let decoded;
@@ -55,70 +55,115 @@ export const protectUser = asyncHandler(async (req, res, next) => {
     if (error.name === "TokenExpiredError") {
       throw new ApiError(
         401,
-        "Token expired. Please login again."
+        "Admin token expired. Please login again."
+      );
+    }
+
+    if (error.name === "JsonWebTokenError") {
+      throw new ApiError(
+        401,
+        "Invalid Admin token."
       );
     }
 
     throw new ApiError(
       401,
-      "Invalid token."
+      "Authentication failed."
     );
   }
 
   // ==================================================
-  // 5. FIND USER
+  // 5. CHECK JWT PAYLOAD
   // ==================================================
 
-  const user = await User.findById(decoded.id)
-    .select("-password");
-
-  if (!user) {
+  if (!decoded) {
     throw new ApiError(
       401,
-      "User not found."
+      "Invalid authentication token."
     );
   }
 
   // ==================================================
-  // 6. CHECK USER STATUS
+  // 6. CHECK ADMIN ROLE
   // ==================================================
 
-  if (!user.isActive) {
+  if (decoded.role !== "Admin") {
+    throw new ApiError(
+      403,
+      "Only Admin can access this resource."
+    );
+  }
+
+  // ==================================================
+  // 7. CHECK ADMIN ID
+  // ==================================================
+
+  if (!decoded.id) {
     throw new ApiError(
       401,
-      "User account is inactive."
+      "Invalid Admin token payload."
     );
   }
 
   // ==================================================
-  // 7. ATTACH USER TO REQUEST
+  // 8. FIND ADMIN IN DATABASE
   // ==================================================
 
-  req.user = user;
+  const admin = await Admin.findById(decoded.id);
+
+  if (!admin) {
+    throw new ApiError(
+      401,
+      "Admin not found."
+    );
+  }
+
+  // ==================================================
+  // 9. CHECK ADMIN STATUS
+  // ==================================================
+
+  if (
+    admin.isActive !== undefined &&
+    admin.isActive === false
+  ) {
+    throw new ApiError(
+      403,
+      "Admin account is inactive."
+    );
+  }
+
+  // ==================================================
+  // 10. ATTACH ADMIN TO REQUEST
+  // ==================================================
+
+  req.admin = admin;
+
+  // ==================================================
+  // 11. NEXT
+  // ==================================================
 
   next();
 });
 
 // ======================================================
-// ROLE AUTHORIZATION
+// REQUIRE ADMIN
 // ======================================================
 
-export const authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!req.user) {
+export const requireAdmin = asyncHandler(
+  async (req, res, next) => {
+    if (!req.admin) {
       throw new ApiError(
         401,
-        "Unauthorized. Please login."
-      );
-    }
-
-    if (!roles.includes(req.user.role)) {
-      throw new ApiError(
-        403,
-        "You don't have permission to access this resource."
+        "Unauthorized. Admin access required."
       );
     }
 
     next();
-  };
-};
+  }
+);
+
+// ======================================================
+// DEFAULT EXPORT
+// ======================================================
+
+export default protect;

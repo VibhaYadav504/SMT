@@ -1,14 +1,21 @@
+
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
+    // ============================================
+    // FULL NAME
+    // ============================================
     fullName: {
       type: String,
       required: true,
       trim: true,
     },
 
+    // ============================================
+    // EMAIL
+    // ============================================
     email: {
       type: String,
       required: true,
@@ -17,6 +24,9 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
 
+    // ============================================
+    // PHONE
+    // ============================================
     phone: {
       type: String,
       required: true,
@@ -24,6 +34,9 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
 
+    // ============================================
+    // PASSWORD
+    // ============================================
     password: {
       type: String,
       required: true,
@@ -31,70 +44,100 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
 
+    // ============================================
+    // PROFILE IMAGE
+    // ============================================
     profileImage: {
       public_id: {
         type: String,
         default: "",
       },
+
       url: {
         type: String,
         default: "",
       },
     },
 
+    // ============================================
+    // USER ROLE
+    // ============================================
     role: {
       type: String,
-      enum: ["Admin", "Staff"],
-      default: "Staff",
+      enum: ["Student"],
+      default: "Student",
     },
 
+    // ============================================
+    // ACCOUNT STATUS
+    // ============================================
     isActive: {
       type: Boolean,
       default: true,
     },
 
-    lastLogin: Date,
+    // ============================================
+    // LAST LOGIN
+    // ============================================
+    lastLogin: {
+      type: Date,
+    },
 
+    // ============================================
+    // PASSWORD RESET OTP
+    // ============================================
+    resetOtp: {
+      type: String,
+      select: false,
+    },
 
+    resetOtpExpire: {
+      type: Date,
+      select: false,
+    },
 
-resetOtp: {
-  type: String,
-  select: false,
-},
-
-resetOtpExpire: {
-  type: Date,
-  select: false,
-},
-
-isOtpVerified: {
-  type: Boolean,
-  default: false,
-},
-
+    isOtpVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
 
-
-  
+  // ============================================
+  // TIMESTAMPS
+  // ============================================
   {
     timestamps: true,
   }
 );
 
-/**
- * Hash Password
- */
+// ============================================
+// HASH PASSWORD BEFORE SAVE
+// ============================================
+
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
 
-  this.password = await bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(
+    this.password,
+    10
+  );
 });
 
-/**
- * Compare Password
- */
-userSchema.methods.comparePassword = async function (password) {
-  return await bcrypt.compare(password, this.password);
+// ============================================
+// COMPARE PASSWORD
+// ============================================
+
+userSchema.methods.comparePassword = async function (
+  password
+) {
+  return await bcrypt.compare(
+    password,
+    this.password
+  );
 };
 
-export default mongoose.model("User", userSchema);
+export default mongoose.model(
+  "User",
+  userSchema
+);
+

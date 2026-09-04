@@ -1,4 +1,5 @@
 import express from "express";
+
 import upload from "../middlewares/upload.middleware.js";
 
 import {
@@ -9,7 +10,10 @@ import {
   deleteBanner,
 } from "../controllers/bannerController.js";
 
-import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
+import {
+  protect,
+  requireAdmin,
+} from "../middlewares/admin.middleware.js";
 
 const router = express.Router();
 
@@ -18,37 +22,34 @@ const router = express.Router();
 // Students can view banners
 // ============================
 
-// Get All Banners
 router.get("/", getAllBanners);
 
-// Get Banner By ID
 router.get("/:id", getBannerById);
 
-
 // ============================
-// Super Admin Only
+// Admin Only Routes
 // ============================
 
-// Create Banner
 router.post(
   "/",
-  protectSuperAdmin,
+  protect,
+  requireAdmin,
   upload.single("image"),
   createBanner
 );
 
-// Update Banner
 router.put(
   "/:id",
-  protectSuperAdmin,
+  protect,
+  requireAdmin,
   upload.single("image"),
   updateBanner
 );
 
-// Delete Banner
 router.delete(
   "/:id",
-  protectSuperAdmin,
+  protect,
+  requireAdmin,
   deleteBanner
 );
 

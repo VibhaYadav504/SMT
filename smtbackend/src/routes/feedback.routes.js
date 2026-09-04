@@ -10,7 +10,11 @@ import {
   removeFeedback,
 } from "../controllers/feedback.controller.js";
 
-import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
+import { protect } from "../middlewares/admin.middleware.js";
+import {
+  protectUser,
+  authorize,
+} from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
@@ -30,26 +34,27 @@ router.get(
   fetchFeedback
 );
 
-// Add Feedback - Super Admin Only
+// Add Feedback - Student Only
 router.post(
   "/",
-  protectSuperAdmin,
+  protectUser,
+  authorize("Student"),
   upload.single("thumbnail"),
   addFeedback
 );
 
-// Update Feedback - Super Admin Only
+// Update Feedback - Admin Only
 router.put(
   "/:id",
-  protectSuperAdmin,
+  protect,
   upload.single("thumbnail"),
   editFeedback
 );
 
-// Delete Feedback - Super Admin Only
+// Delete Feedback - Admin Only
 router.delete(
   "/:id",
-  protectSuperAdmin,
+  protect,
   removeFeedback
 );
 

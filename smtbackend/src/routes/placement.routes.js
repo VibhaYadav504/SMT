@@ -1,3 +1,4 @@
+
 import express from "express";
 
 import upload from "../middlewares/upload.middleware.js";
@@ -10,7 +11,7 @@ import {
   removePlacement,
 } from "../controllers/placement.controller.js";
 
-import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
+import { protect } from "../middlewares/admin.middleware.js";
 
 const router = express.Router();
 
@@ -18,39 +19,55 @@ const router = express.Router();
 // Placement Routes
 // ============================================
 
-// Add Placement - Super Admin Only
+// ============================================
+// Add Placement - Admin Only
+// ============================================
+
 router.post(
   "/",
-  protectSuperAdmin,
+  protect,
   upload.single("image"),
   addPlacement
 );
 
+// ============================================
 // Get All Placements - Public
+// ============================================
+
 router.get(
   "/",
   fetchPlacements
 );
 
+// ============================================
 // Get Placement By ID - Public
+// ============================================
+
 router.get(
   "/:id",
   fetchPlacement
 );
 
-// Update Placement - Super Admin Only
+// ============================================
+// Update Placement - Admin Only
+// ============================================
+
 router.put(
   "/:id",
-  protectSuperAdmin,
+  protect,
   upload.single("image"),
   editPlacement
 );
 
-// Delete Placement - Super Admin Only
+// ============================================
+// Delete Placement - Admin Only
+// ============================================
+
 router.delete(
   "/:id",
-  protectSuperAdmin,
+  protect,
   removePlacement
 );
 
 export default router;
+

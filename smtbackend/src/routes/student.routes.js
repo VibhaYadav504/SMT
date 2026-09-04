@@ -9,7 +9,7 @@ import {
   changeStudentStatus,
 } from "../controllers/student.controller.js";
 
-import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
+import { protect } from "../middlewares/admin.middleware.js";
 
 const router = express.Router();
 
@@ -17,10 +17,10 @@ const router = express.Router();
 // Student Routes
 // ============================================
 
-// Create Student - Super Admin Only
+// Create Student - Admin Only
 router.post(
   "/",
-  protectSuperAdmin,
+  protect,
   createStudent
 );
 
@@ -36,24 +36,24 @@ router.get(
   getStudentById
 );
 
-// Update Student - Super Admin Only
+// Update Student - Admin Only
 router.put(
   "/:id",
-  protectSuperAdmin,
+  protect,
   updateStudent
 );
 
-// Delete Student - Super Admin Only
+// Delete Student - Admin Only
 router.delete(
   "/:id",
-  protectSuperAdmin,
+  protect,
   deleteStudent
 );
 
-// Change Student Status - Super Admin Only
+// Change Student Status - Admin Only
 router.patch(
   "/:id/status",
-  protectSuperAdmin,
+  protect,
   changeStudentStatus
 );
 

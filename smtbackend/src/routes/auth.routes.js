@@ -19,7 +19,7 @@ import {
   changePasswordValidator,
 } from "../validators/auth.validator.js";
 
-import { protect } from "../middlewares/auth.middleware.js";
+import { protectUser } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -47,17 +47,17 @@ router.post(
   forgotPassword
 );
 
-//verifyResetOtp
+// Verify Reset OTP
+router.post(
+  "/verify-reset-otp",
+  verifyResetOtp
+);
 
-router.post
-("/verify-reset-otp", 
-  verifyResetOtp);
-
-//resetPassword
-
-  router.post
-  ("/reset-password", 
-  resetPassword);
+// Reset Password
+router.post(
+  "/reset-password",
+  resetPassword
+);
 
 /* ===========================
    Protected Routes
@@ -66,21 +66,21 @@ router.post
 // Logout
 router.post(
   "/logout",
-  protect,
+  protectUser,
   logout
 );
 
 // Get Profile
 router.get(
   "/profile",
-  protect,
+  protectUser,
   getProfile
 );
 
 // Update Profile
 router.put(
   "/profile",
-  protect,
+  protectUser,
   updateProfileValidator,
   updateProfile
 );
@@ -88,7 +88,7 @@ router.put(
 // Change Password
 router.put(
   "/change-password",
-  protect,
+  protectUser,
   changePasswordValidator,
   changePassword
 );

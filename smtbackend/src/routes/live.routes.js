@@ -8,7 +8,7 @@ import {
   deleteLive,
 } from "../controllers/live.controller.js";
 
-import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
+import { protect } from "../middlewares/admin.middleware.js";
 
 import upload from "../middlewares/upload.middleware.js";
 
@@ -25,13 +25,13 @@ router.get("/", getLives);
 router.get("/:id", getLiveById);
 
 // ============================================
-// SUPER ADMIN PROTECTED
+// ADMIN PROTECTED
 // ============================================
 
 // Create Live
 router.post(
   "/",
-  protectSuperAdmin,
+  protect,
   upload.single("thumbnail"),
   createLive
 );
@@ -39,7 +39,7 @@ router.post(
 // Update Live
 router.put(
   "/:id",
-  protectSuperAdmin,
+  protect,
   upload.single("thumbnail"),
   updateLive
 );
@@ -47,7 +47,7 @@ router.put(
 // Delete Live
 router.delete(
   "/:id",
-  protectSuperAdmin,
+  protect,
   deleteLive
 );
 

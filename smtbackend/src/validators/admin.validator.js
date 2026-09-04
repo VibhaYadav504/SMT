@@ -1,10 +1,15 @@
 import { body } from "express-validator";
 import { validate } from "./student.validator.js";
 
-export const superAdminLoginValidator = [
+// ============================================
+// ADMIN LOGIN VALIDATOR
+// ============================================
+
+export const adminLoginValidator = [
   body("username")
     .notEmpty()
-    .withMessage("Username is required"),
+    .withMessage("Username is required")
+    .trim(),
 
   body("password")
     .notEmpty()

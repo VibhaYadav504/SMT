@@ -10,7 +10,7 @@ import {
   removePlaylist,
 } from "../controllers/playlist.controller.js";
 
-import { protectSuperAdmin } from "../middlewares/superAdmin.middleware.js";
+import { protect } from "../middlewares/admin.middleware.js";
 
 const router = express.Router();
 
@@ -18,38 +18,38 @@ const router = express.Router();
 // Playlist Routes
 // ============================================
 
-// Add Playlist - Super Admin Only
+// Add Playlist - Admin Only
 router.post(
   "/",
-  protectSuperAdmin,
+  protect,
   upload.single("thumbnail"),
   addPlaylist
 );
 
-// Get All Playlists - Public (No Token Required)
+// Get All Playlists - Public
 router.get(
   "/",
   fetchPlaylists
 );
 
-// Get Playlist By ID - Public (No Token Required)
+// Get Playlist By ID - Public
 router.get(
   "/:id",
   fetchPlaylist
 );
 
-// Update Playlist - Super Admin Only
+// Update Playlist - Admin Only
 router.put(
   "/:id",
-  protectSuperAdmin,
+  protect,
   upload.single("thumbnail"),
   editPlaylist
 );
 
-// Delete Playlist - Super Admin Only
+// Delete Playlist - Admin Only
 router.delete(
   "/:id",
-  protectSuperAdmin,
+  protect,
   removePlaylist
 );
 
