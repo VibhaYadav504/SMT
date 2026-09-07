@@ -23,61 +23,72 @@ import { protectUser } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
-/* ===========================
-   Public Routes
-=========================== */
+/* ==========================================
+   TEST AUTH ROUTE
+========================================== */
 
-// Register
+router.get("/test", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Auth routes working",
+  });
+});
+
+/* ==========================================
+   PUBLIC ROUTES - STUDENT
+========================================== */
+
+// REGISTER
 router.post(
   "/register",
   registerValidator,
   register
 );
 
-// Login
+// LOGIN
 router.post(
   "/login",
   loginValidator,
   login
 );
 
-// Forgot Password
+// FORGOT PASSWORD
 router.post(
   "/forgot-password",
   forgotPassword
 );
 
-// Verify Reset OTP
+// VERIFY RESET OTP
 router.post(
   "/verify-reset-otp",
   verifyResetOtp
 );
 
-// Reset Password
+// RESET PASSWORD
 router.post(
   "/reset-password",
   resetPassword
 );
 
-/* ===========================
-   Protected Routes
-=========================== */
+/* ==========================================
+   PROTECTED ROUTES - STUDENT
+========================================== */
 
-// Logout
+// LOGOUT
 router.post(
   "/logout",
   protectUser,
   logout
 );
 
-// Get Profile
+// GET PROFILE
 router.get(
   "/profile",
   protectUser,
   getProfile
 );
 
-// Update Profile
+// UPDATE PROFILE
 router.put(
   "/profile",
   protectUser,
@@ -85,12 +96,24 @@ router.put(
   updateProfile
 );
 
-// Change Password
+// CHANGE PASSWORD
 router.put(
   "/change-password",
   protectUser,
   changePasswordValidator,
   changePassword
+);
+router.post(
+  "/register",
+  (req, res, next) => {
+    console.log("========== REGISTER BODY ==========");
+    console.log(req.body);
+    console.log("Content-Type:", req.headers["content-type"]);
+
+    next();
+  },
+  registerValidator,
+  register
 );
 
 export default router;
